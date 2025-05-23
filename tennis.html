@@ -1,0 +1,306 @@
+<!-- fitness-equipment.html -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>智能校园共享运动器材管理系统</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+header {
+    background-color: #333;
+    color: #fff;
+    padding: 10px 0;
+    text-align: center;
+}
+nav {
+    display: flex;
+    justify-content: center;
+    background-color: #444;
+}
+nav a {
+    color: #fff;
+    padding: 10px 20px;
+    text-decoration: none;
+}
+nav a:hover {
+    background-color: #555;
+}
+main {
+    padding: 20px;
+    min-height: calc(100vh - 200px); /* 防止内容过少时页脚上浮 */
+}
+footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 10px 0;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+}
+
+.selection-title {
+    text-align: center;
+    margin: 40px 0;
+    color: #333;
+    font-size: 2em;
+}
+.button-container {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+    max-width: 800px;
+    margin: 0 auto;
+}
+.equipment-btn {
+    padding: 20px 40px;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 1.2em;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+.equipment-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+    background-color: #0056b3;
+}
+/* 新增器材列表样式 */
+.equipment-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    max-width: 1200px;
+    margin: 40px auto;
+}
+.equipment-item {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    text-align: center;
+}
+.equipment-item h3 {
+    color: #333;
+    margin: 15px 0;
+}
+.status {
+    padding: 8px;
+    border-radius: 20px;
+    font-size: 0.9em;
+}
+.available {
+    background: #d4edda;
+    color: #155724;
+}
+.unavailable {
+    background: #f8d7da;
+    color: #721c24;
+}
+/* 增强型公共样式 */
+.equipment-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    max-width: 1200px;
+    margin: 40px auto;
+}
+
+.equipment-item {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+.equipment-item:hover {
+    transform: translateY(-5px);
+}
+
+.equipment-item h3 {
+    color: #333;
+    margin: 15px 0;
+    font-size: 1.4em;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+}
+
+.equipment-item p {
+    color: #666;
+    line-height: 1.6;
+    margin: 10px 0;
+}
+
+.status {
+    display: inline-block;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 0.9em;
+    margin-top: 15px;
+}
+
+.available {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.unavailable {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.reserve-btn {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 8px 20px;
+    background: #28a745;
+    color: white;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background 0.3s;
+}
+
+.reserve-btn:hover {
+    background: #218838;
+}
+/* 弹窗样式 */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 1000;
+}
+
+.modal-content {
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+    max-width: 400px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.close {
+    position: absolute;
+    right: 15px;
+    top: 10px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #666;
+}
+
+.close:hover {
+    color: #333;
+}
+
+.confirm-btn {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 8px 25px;
+    background: #28a745;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.confirm-btn:hover {
+    background: #218838;
+}
+
+</style>
+</head>
+<body>
+<header>
+    <h1>网球</h1>
+</header>
+<main>
+    <div class="equipment-list">
+        <div class="equipment-item">
+            <h3>球拍1(进攻型)</h3>
+            <p>材质：碳纤维</p>
+            <a href="#" class="reserve-btn">立即预约</a>
+        </div>
+        <div class="equipment-item">
+            <h3>球拍2(防守型)</h3>
+            <p>材质：铝合金</p>
+            <a href="#" class="reserve-btn">立即预约</a>
+        </div>
+        <div class="equipment-item">
+             <h3>球拍3(儿童款)</h3>
+            <p>材质：复合材料</p>
+            <a href="#" class="reserve-btn">立即预约</a>
+        </div>
+    </div>
+    <div class="button-container">
+        <a href="index.html" class="equipment-btn">← 返回首页</a>
+    </div>
+</main>
+<footer>
+    大卫爱冒险-智能校园共享运动器材管理系统
+</footer>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    // 获取所有预约按钮
+    const reserveBtns = document.querySelectorAll('.reserve-btn');
+    
+    // 获取弹窗相关元素
+    const modal = document.getElementById('successModal');
+    const closeBtn = document.querySelector('.close');
+
+    // 为每个预约按钮添加点击事件
+    reserveBtns.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault(); // 阻止默认链接行为
+            showModal();
+        });
+    });
+
+    // 关闭按钮点击事件
+    closeBtn.addEventListener('click', closeModal);
+
+    // 点击模态框外部关闭
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            closeModal();
+        }
+    }
+});
+
+function showModal() {
+    document.getElementById('successModal').style.display = 'block';
+}
+
+function closeModal() {
+    document.getElementById('successModal').style.display = 'none';
+}
+</script>
+<div id="successModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>🎉 预约成功!</h2>
+        <div class="confirm-btn" onclick="closeModal()">确定</div>
+    </div>
+</div>
+</body>
+</html>

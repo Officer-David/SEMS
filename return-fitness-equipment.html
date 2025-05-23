@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>智能校园共享运动器材管理系统</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+header {
+    background-color: #333;
+    color: #fff;
+    padding: 10px 0;
+    text-align: center;
+}
+nav {
+    display: flex;
+    justify-content: center;
+    background-color: #444;
+}
+nav a {
+    color: #fff;
+    padding: 10px 20px;
+    text-decoration: none;
+}
+nav a:hover {
+    background-color: #555;
+}
+main {
+    padding: 20px;
+    min-height: calc(100vh - 200px); /* 防止内容过少时页脚上浮 */
+}
+footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 10px 0;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+}
+
+.selection-title {
+    text-align: center;
+    margin: 40px 0;
+    color: #333;
+    font-size: 2em;
+}
+.button-container {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+    max-width: 800px;
+    margin: 0 auto;
+}
+.equipment-btn {
+    padding: 20px 40px;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 1.2em;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+.equipment-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+    background-color: #0056b3;
+}
+/* 新增器材列表样式 */
+.equipment-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    max-width: 1200px;
+    margin: 40px auto;
+}
+.equipment-item {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    text-align: center;
+}
+.equipment-item h3 {
+    color: #333;
+    margin: 15px 0;
+}
+.status {
+    padding: 8px;
+    border-radius: 20px;
+    font-size: 0.9em;
+}
+.available {
+    background: #d4edda;
+    color: #155724;
+}
+.unavailable {
+    background: #f8d7da;
+    color: #721c24;
+}
+/* 增强型公共样式 */
+.equipment-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    max-width: 1200px;
+    margin: 40px auto;
+}
+
+.equipment-item {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+.equipment-item:hover {
+    transform: translateY(-5px);
+}
+
+.equipment-item h3 {
+    color: #333;
+    margin: 15px 0;
+    font-size: 1.4em;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+}
+
+.equipment-item p {
+    color: #666;
+    line-height: 1.6;
+    margin: 10px 0;
+}
+
+.status {
+    display: inline-block;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 0.9em;
+    margin-top: 15px;
+}
+
+.available {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.unavailable {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.reserve-btn {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 8px 20px;
+    background: #dc3545 !important;
+    color: white;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: all 0.3s;
+    cursor: pointer;
+}
+.reserve-btn.returned {
+    background: #6c757d !important;
+    cursor: not-allowed;
+}
+/* 弹窗样式 */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 1000;
+}
+
+.modal-content {
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+    max-width: 400px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.close {
+    position: absolute;
+    right: 15px;
+    top: 10px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #666;
+}
+
+.close:hover {
+    color: #333;
+}
+
+.confirm-btn {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 8px 25px;
+    background: #28a745;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.confirm-btn:hover {
+    background: #218838;
+}
+
+/* 修改弹窗样式 */
+.modal-content h2 {
+    color: #dc3545;
+}
+
+.confirm-btn {
+    background: #dc3545;
+}
+
+.confirm-btn:hover {
+    background: #c82333;
+}
+</style>
+</head>
+<body>
+<header>
+    <h1>健身器材归还</h1>
+</header>
+<main>
+    <div class="equipment-list">
+        <div class="equipment-item">
+            <h3>深蹲架</h3>
+            
+            <a href="#" class="reserve-btn">归还器材</a>
+        </div>
+        <div class="equipment-item">
+            <h3>哑铃</h3>
+            
+            <a href="#" class="reserve-btn">归还器材</a>
+        </div>
+        <div class="equipment-item">
+            <h3>瑜伽垫</h3>
+            
+            <a href="#" class="reserve-btn">归还器材</a>
+        </div>
+    </div>
+    <div class="button-container">
+        <a href="return-equipment.html" class="equipment-btn">← 返回归还列表</a>
+    </div>
+</main>
+
+<!-- 修改后的归还成功弹窗 -->
+<div id="successModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>✅ 归还成功!</h2>
+        
+        <div class="confirm-btn" onclick="closeModal()">确定</div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const returnBtns = document.querySelectorAll('.reserve-btn');
+    const modal = document.getElementById('successModal');
+    const closeBtn = document.querySelector('.close');
+
+    returnBtns.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            if(this.classList.contains('returned')) return;
+            
+            const equipment = this.parentNode.querySelector('h3').textContent;
+            if(confirm(`确定要归还 ${equipment} 吗？`)) {
+                // 更新按钮状态
+                this.textContent = "已归还";
+                this.classList.add('returned');
+                showModal();
+            }
+        });
+    });
+
+    closeBtn.addEventListener('click', closeModal);
+    window.onclick = function(e) {
+        if(e.target == modal) closeModal();
+    }
+});
+
+function showModal() {
+    document.getElementById('successModal').style.display = 'block';
+}
+
+function closeModal() {
+    document.getElementById('successModal').style.display = 'none';
+}
+</script>
+</body>
+</html>
